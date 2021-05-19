@@ -5,7 +5,6 @@ import "firebase/auth";
 import ChatRoom from "./ChatRoom";
 
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useCollectionData } from "react-firebase-hooks/firestore";
 
 firebase.initializeApp({
   apiKey: "AIzaSyCaotVCZH_Y3v5WF1C8yW0y-peVb4EmH-Y",
@@ -18,7 +17,6 @@ firebase.initializeApp({
 });
 
 const auth = firebase.auth();
-const firestore = firebase.firestore();
 
 function MessageSpace() {
   const [user] = useAuthState(auth);
