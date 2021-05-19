@@ -7,6 +7,7 @@ import "../css/MessageSpace.css";
 
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
+import Contacts from "./Contacts";
 
 firebase.initializeApp({
   apiKey: "AIzaSyCaotVCZH_Y3v5WF1C8yW0y-peVb4EmH-Y",
@@ -24,7 +25,10 @@ function MessageSpace() {
   const [user] = useAuthState(auth);
   return (
     <div>
-      <section>{user ? <ChatRoom /> : <SignIn />}</section>
+      <section className="contacts">
+        {user ? <Contacts /> : <div></div>}
+      </section>
+      <section className="chat">{user ? <ChatRoom /> : <SignIn />}</section>
     </div>
   );
 }
@@ -90,7 +94,7 @@ function ChatRoom() {
             setFormValue(e.target.value);
           }}
         />
-        <button type="submit">send</button>
+        <button type="submit">⌲</button>
       </form>
     </div>
   );

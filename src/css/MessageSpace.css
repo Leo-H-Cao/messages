@@ -1,19 +1,18 @@
 body {
   background-color: #282c34;
 }
-
 .App {
   text-align: center;
   max-width: 728px;
   margin: 0 auto;
 }
 
-.App section {
+.chat {
   display: flex;
   flex-direction: column;
   justify-content: center;
   min-height: 100vh;
-  background-color: rgb(40, 37, 53);
+  background-color: rgb(66, 63, 78);
 }
 
 main {
@@ -51,13 +50,14 @@ form {
 form button {
   width: 20%;
   background-color: rgb(56, 56, 143);
+  color: white;
 }
 
 input {
   line-height: 1.5;
   width: 100%;
   font-size: 1.5rem;
-  background: rgb(58, 58, 58);
+  background: grey;
   color: white;
   outline: none;
   border: none;
@@ -65,7 +65,7 @@ input {
 }
 
 button {
-  background-color: #282c34; /* Green */
+  background-color: #282c34;
   border: none;
   color: white;
   padding: 15px 32px;
@@ -135,4 +135,11 @@ img {
 
 .dummy {
   font-size: 55px;
+  color: rgb(66, 63, 78);
+}
+
+.contacts {
+  position: absolute;
+  left: 20px;
+  width: 300px;
 }
