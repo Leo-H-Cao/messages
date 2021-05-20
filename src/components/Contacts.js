@@ -3,6 +3,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 import { useState, useRef } from "react";
+import "../css/Contacts.css";
 
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -27,16 +28,18 @@ function Contacts() {
   }
 
   return (
-    <ul id="my-contacts">
-      {contacts &&
-        contacts.map((contact) => (
-          <SingleContact
-            key={contact.id}
-            name={contact.name}
-            photoURL={contact.photoURL}
-          />
-        ))}
-    </ul>
+    <div>
+      <ul id="my-contacts">
+        {contacts &&
+          contacts.map((contact) => (
+            <SingleContact
+              key={contact.id}
+              name={contact.name}
+              photoURL={contact.photoURL}
+            />
+          ))}
+      </ul>
+    </div>
   );
 }
 

@@ -4,10 +4,12 @@ import "firebase/firestore";
 import "firebase/auth";
 import { useState, useRef } from "react";
 import "../css/MessageSpace.css";
+import "./ContactEntry";
 
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Contacts from "./Contacts";
+import ContactEntry from "./ContactEntry";
 
 firebase.initializeApp({
   apiKey: "AIzaSyCaotVCZH_Y3v5WF1C8yW0y-peVb4EmH-Y",
@@ -23,37 +25,27 @@ const auth = firebase.auth();
 
 function MessageSpace() {
   const [user] = useAuthState(auth);
+  const [popUpOpen, setPopUpOpen] = useState(false);
+
+  const togglePopup = () => {
+    setPopUpOpen(!popUpOpen);
+  };
+
   return (
     <div>
       <section className="contacts">
         {user ? <Contacts /> : <div></div>}
+        <button onClick={togglePopup}>Add Contacts</button>
       </section>
       <section className="chat">{user ? <ChatRoom /> : <SignIn />}</section>
+      <section>
+        {popUpOpen && <ContactEntry handleClose={togglePopup} />}
+      </section>
     </div>
   );
 }
 
-function SignIn() {
-  const signInWithGoogle = () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider);
-  };
-
-  return (
-    <div>
-      <button onClick={signInWithGoogle}>Sign In</button>
-    </div>
-  );
-}
-
-function SignOut() {
-  const signOutWithGoogle = () => {
-    auth.signOut();
-  };
-  if (auth.currentUser) {
-    return <button onClick={signOutWithGoogle}>Sign Out</button>;
-  }
-}
+function addContact() {} /* Pop up entry for uid, name, photoURL*/
 
 function ChatRoom() {
   const firestore = firebase.firestore();
@@ -67,6 +59,7 @@ function ChatRoom() {
 
   const sendMessage = async (e) => {
     e.preventDefault();
+    console.log(auth.currentUser);
     const { uid, photoURL } = auth.currentUser;
     await messagesRef.add({
       text: formValue,
@@ -110,6 +103,28 @@ function ChatMessage(props) {
       <p>{text}</p>
     </div>
   );
+}
+
+function SignIn() {
+  const signInWithGoogle = () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider);
+  };
+
+  return (
+    <div>
+      <button onClick={signInWithGoogle}>Sign In</button>
+    </div>
+  );
+}
+
+function SignOut() {
+  const signOutWithGoogle = () => {
+    auth.signOut();
+  };
+  if (auth.currentUser) {
+    return <button onClick={signOutWithGoogle}>Sign Out</button>;
+  }
 }
 
 export default MessageSpace;
