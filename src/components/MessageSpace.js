@@ -35,7 +35,7 @@ function MessageSpace() {
     <div>
       <section className="contacts">
         {user ? <Contacts /> : <div></div>}
-        <button onClick={togglePopup}>Add Contacts</button>
+        {user && <button onClick={togglePopup}>Add Contacts</button>}
       </section>
       <section className="chat">{user ? <ChatRoom /> : <SignIn />}</section>
       <section>
@@ -50,9 +50,13 @@ function MessageSpace() {
 const addContact = async (e, uid, name, photoURL, close) => {
   e.preventDefault();
   close();
-  console.log(uid);
-  console.log(name);
-  console.log(photoURL);
+  const firestore = firebase.firestore();
+  const contactsRef = firestore.collection("contacts");
+  await contactsRef.add({
+    name: name,
+    uid: uid,
+    photoURL: photoURL,
+  });
 }; // Pop up entry for uid, name, photoURL
 
 function ChatRoom() {
