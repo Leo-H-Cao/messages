@@ -56,8 +56,9 @@ const addContact = async (e, uid, name, photoURL, close) => {
     name: name,
     uid: uid,
     photoURL: photoURL,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
   });
-}; // Pop up entry for uid, name, photoURL
+};
 
 function ChatRoom() {
   const firestore = firebase.firestore();
