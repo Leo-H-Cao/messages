@@ -2,11 +2,9 @@ import React from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
-import { useState, useRef } from "react";
 import "../css/Contacts.css";
 
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import { useAuthState } from "react-firebase-hooks/auth";
 
 function Contacts(props) {
   const firestore = firebase.firestore();
@@ -19,7 +17,12 @@ function Contacts(props) {
       return null;
     }
     return (
-      <li onClick={() => props.handleClick(props.uid)}>
+      <li
+        onClick={() => {
+          props.handleClick(props.uid);
+          props.chooseName(props.name);
+        }}
+      >
         <span>
           <img src={props.photoURL} />
           <br />
@@ -41,6 +44,7 @@ function Contacts(props) {
               photoURL={contact.photoURL}
               handleClick={props.selectUser}
               currentUID={props.currentUID}
+              chooseName={props.selectUserName}
             />
           ))}
       </ul>

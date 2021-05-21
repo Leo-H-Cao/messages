@@ -23,12 +23,9 @@ firebase.initializeApp({
 
 const auth = firebase.auth();
 
-function MessageSpace() {
+function MessageSpace(props) {
   const [user] = useAuthState(auth);
   const [popUpOpen, setPopUpOpen] = useState(false);
-  const [otherUserID, setOtherUserID] = useState("");
-  console.log(otherUserID);
-  console.log(user);
 
   const togglePopup = () => {
     setPopUpOpen(!popUpOpen);
@@ -38,14 +35,18 @@ function MessageSpace() {
     <div>
       <section className="contacts">
         {user ? (
-          <Contacts selectUser={setOtherUserID} currentUID={user.uid} />
+          <Contacts
+            selectUser={props.setOtherUserID}
+            currentUID={user.uid}
+            selectUserName={props.setOtherUserName}
+          />
         ) : (
           <div></div>
         )}
         {user && <button onClick={togglePopup}>Add Contacts</button>}
       </section>
       <section className="chat">
-        {user ? <ChatRoom otherUserID={otherUserID} /> : <SignIn />}
+        {user ? <ChatRoom otherUserID={props.otherUserID} /> : <SignIn />}
       </section>
       <section>
         {popUpOpen && (
