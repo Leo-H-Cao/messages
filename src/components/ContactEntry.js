@@ -1,29 +1,49 @@
 import React from "react";
 import "../css/ContactEntry.css";
+import { useState } from "react";
 
 function ContactEntry(props) {
+  const [name, setName] = useState("");
+  const [uid, setUID] = useState("");
+  const [photoURL, setPhotoURL] = useState("");
+
   return (
     <div className="popup-box">
       <div className="box">
         <span className="close-icon" onClick={props.handleClose}>
           x
         </span>
-        <label htmlFor="name">Name</label>
-        <input className="form-control" id="name" />
-        <label htmlFor="email">Email address</label>
-        <input
-          type="email"
-          className="form-control"
-          id="email"
-          placeholder="name@example.com"
-        />
-        <button
-          className="form-control btn btn-primary"
-          type="submit"
-          onClick={props.handleClose}
+        <form
+          onSubmit={(e) =>
+            props.handleSubmit(e, uid, name, photoURL, props.handleClose)
+          }
         >
-          Submit
-        </button>
+          <label htmlFor="name">Name</label>
+          <input
+            className="form-control"
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <label htmlFor="uid">User ID</label>
+          <input
+            value={uid}
+            type="uid"
+            className="form-control"
+            id="uid"
+            onChange={(e) => setUID(e.target.value)}
+          />
+          <label htmlFor="photoURL">Photo URL</label>
+          <input
+            className="form-control"
+            id="photoURL"
+            value={photoURL}
+            onChange={(e) => setPhotoURL(e.target.value)}
+          />
+          <button className="form-control btn btn-primary" type="submit">
+            Submit
+          </button>
+        </form>
       </div>
     </div>
   );

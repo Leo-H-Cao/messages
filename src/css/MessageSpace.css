@@ -36,7 +36,7 @@ main::-webkit-scrollbar-thumb {
   background: #6649b8;
 }
 
-form {
+.text {
   height: 10vh;
   position: fixed;
   bottom: 0;
@@ -47,7 +47,7 @@ form {
   font-size: 1.5rem;
 }
 
-form button {
+.text button {
   width: 20%;
   background-color: rgb(56, 56, 143);
   color: white;

@@ -39,13 +39,21 @@ function MessageSpace() {
       </section>
       <section className="chat">{user ? <ChatRoom /> : <SignIn />}</section>
       <section>
-        {popUpOpen && <ContactEntry handleClose={togglePopup} />}
+        {popUpOpen && (
+          <ContactEntry handleClose={togglePopup} handleSubmit={addContact} />
+        )}
       </section>
     </div>
   );
 }
 
-function addContact() {} /* Pop up entry for uid, name, photoURL*/
+const addContact = async (e, uid, name, photoURL, close) => {
+  e.preventDefault();
+  close();
+  console.log(uid);
+  console.log(name);
+  console.log(photoURL);
+}; // Pop up entry for uid, name, photoURL
 
 function ChatRoom() {
   const firestore = firebase.firestore();
@@ -59,7 +67,6 @@ function ChatRoom() {
 
   const sendMessage = async (e) => {
     e.preventDefault();
-    console.log(auth.currentUser);
     const { uid, photoURL } = auth.currentUser;
     await messagesRef.add({
       text: formValue,
@@ -80,7 +87,7 @@ function ChatRoom() {
       <div ref={dummy}></div>
       <div className="dummy">Loading...</div>
 
-      <form onSubmit={sendMessage}>
+      <form className="text" onSubmit={sendMessage}>
         <input
           value={formValue}
           onChange={(e) => {
@@ -118,13 +125,16 @@ function SignIn() {
   );
 }
 
-function SignOut() {
+export function SignOut() {
+  const [user] = useAuthState(auth);
   const signOutWithGoogle = () => {
     auth.signOut();
   };
-  if (auth.currentUser) {
+  console.log(user);
+  if (user) {
     return <button onClick={signOutWithGoogle}>Sign Out</button>;
   }
+  return null;
 }
 
 export default MessageSpace;
