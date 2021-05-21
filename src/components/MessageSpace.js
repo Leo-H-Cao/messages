@@ -26,6 +26,9 @@ const auth = firebase.auth();
 function MessageSpace() {
   const [user] = useAuthState(auth);
   const [popUpOpen, setPopUpOpen] = useState(false);
+  const [otherUserID, setOtherUserID] = useState("");
+  console.log(otherUserID);
+  console.log(user);
 
   const togglePopup = () => {
     setPopUpOpen(!popUpOpen);
@@ -34,10 +37,16 @@ function MessageSpace() {
   return (
     <div>
       <section className="contacts">
-        {user ? <Contacts /> : <div></div>}
+        {user ? (
+          <Contacts selectUser={setOtherUserID} currentUID={user.uid} />
+        ) : (
+          <div></div>
+        )}
         {user && <button onClick={togglePopup}>Add Contacts</button>}
       </section>
-      <section className="chat">{user ? <ChatRoom /> : <SignIn />}</section>
+      <section className="chat">
+        {user ? <ChatRoom otherUserID={otherUserID} /> : <SignIn />}
+      </section>
       <section>
         {popUpOpen && (
           <ContactEntry handleClose={togglePopup} handleSubmit={addContact} />
@@ -60,7 +69,7 @@ const addContact = async (e, uid, name, photoURL, close) => {
   });
 };
 
-function ChatRoom() {
+function ChatRoom(props) {
   const firestore = firebase.firestore();
   const messagesRef = firestore.collection("messages");
   const query = messagesRef.orderBy("createdAt").limit(25);
@@ -78,6 +87,7 @@ function ChatRoom() {
       uid: uid,
       photoURL: photoURL,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      receiverID: props.otherUserID,
     });
     setFormValue("");
     dummy.current.scrollIntoView({ behavior: "smooth" });
@@ -87,7 +97,13 @@ function ChatRoom() {
     <div>
       <div>
         {messages &&
-          messages.map((msg) => <ChatMessage key={msg.id} message={msg} />)}
+          messages.map((msg) => (
+            <ChatMessage
+              otherUserID={props.otherUserID}
+              key={msg.id}
+              message={msg}
+            />
+          ))}
       </div>
       <div ref={dummy}></div>
       <div className="dummy">Loading...</div>
@@ -106,15 +122,21 @@ function ChatRoom() {
 }
 
 function ChatMessage(props) {
-  const { text, uid, photoURL } = props.message;
+  const { text, uid, photoURL, receiverID } = props.message;
   const messageClass = uid === auth.currentUser.uid ? "sent" : "received";
-
-  return (
-    <div className={`message ${messageClass}`}>
-      <img src={photoURL} />
-      <p>{text}</p>
-    </div>
-  );
+  if (
+    uid == props.otherUserID ||
+    (messageClass == "sent" && receiverID == props.otherUserID)
+  ) {
+    return (
+      <div className={`message ${messageClass}`}>
+        <img src={photoURL} />
+        <p>{text}</p>
+      </div>
+    );
+  } else {
+    return null;
+  }
 }
 
 function SignIn() {
@@ -135,7 +157,6 @@ export function SignOut() {
   const signOutWithGoogle = () => {
     auth.signOut();
   };
-  console.log(user);
   if (user) {
     return <button onClick={signOutWithGoogle}>Sign Out</button>;
   }

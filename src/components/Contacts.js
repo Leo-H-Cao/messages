@@ -8,16 +8,18 @@ import "../css/Contacts.css";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-function Contacts() {
+function Contacts(props) {
   const firestore = firebase.firestore();
   const messagesRef = firestore.collection("contacts");
   const query = messagesRef.orderBy("createdAt").limit(25);
   const [contacts] = useCollectionData(query, { idField: "id" });
-  console.log(contacts);
 
   function SingleContact(props) {
+    if (props.currentUID == props.uid) {
+      return null;
+    }
     return (
-      <li>
+      <li onClick={() => props.handleClick(props.uid)}>
         <span>
           <img src={props.photoURL} />
           <br />
@@ -33,9 +35,12 @@ function Contacts() {
         {contacts &&
           contacts.map((contact) => (
             <SingleContact
+              uid={contact.uid}
               key={contact.id}
               name={contact.name}
               photoURL={contact.photoURL}
+              handleClick={props.selectUser}
+              currentUID={props.currentUID}
             />
           ))}
       </ul>
